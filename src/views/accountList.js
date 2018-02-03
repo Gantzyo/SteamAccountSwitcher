@@ -1,7 +1,7 @@
 // Renderer process
 
 // Imports
-const steamUtils = require('./service/steamUtils');
+const steamUtils = require('../service/steamUtils');
 window.$ = window.jQuery = require('jQuery');
 
 // Logic
