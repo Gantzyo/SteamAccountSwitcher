@@ -2,7 +2,7 @@
   "name": "steamaccountswitcher",
   "version": "0.0.1",
   "description": "A simple GUI to swtich between your steam accounts",
-  "main": "src/index.js",
+  "main": "src/main/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron ."
@@ -27,11 +27,5 @@
     "jquery": "^3.3.1",
     "popper.js": "^1.12.9",
     "regedit": "^2.2.7"
-  },
-  "build": {
-    "output": "dist",
-    "win": {
-      "asar": "true"
-    }
   }
 }
