@@ -1,33 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Steam Account Switcher</title>
-    
-    <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <script type="text/javascript">
-      // FontAwesome icons
-      const fontawesome = require('@fortawesome/fontawesome');
-      const faArrowDown = require('@fortawesome/fontawesome-free-solid/faArrowDown');
-      const faSpinner = require('@fortawesome/fontawesome-free-solid/faSpinner');
-  
-      fontawesome.library.add(faArrowDown);
-      fontawesome.library.add(faSpinner);
-    </script>
-  </head>
-  <body>
-    <h3>Steam status: <span id="steamStatus"></span></h3>
-    <div id="accountsGrid" class="container d-none">
-      <div id="accountsHeader" class="row"></div>
-      <div id="accountsBody">
-      </div>
-    </div>
-    <div class="text-center fa-3x" id="loadingAccounts">
-      <i class="fas fa-spinner fa-spin"></i>
-    </div>
-  </body>
-  <script>
-      require("./accountList");
+
+<head>
+  <meta charset="UTF-8">
+  <title>Steam Account Switcher</title>
+
+  <!-- <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css"> -->
+  <link rel="stylesheet" href="../resources/css/bootstrap-darkly.min.css">
+  <script type="text/javascript">
+    // FontAwesome icons
+    const fontawesome = require('@fortawesome/fontawesome')
+    const faArrowDown = require('@fortawesome/fontawesome-free-solid/faArrowDown')
+    const faSpinner = require('@fortawesome/fontawesome-free-solid/faSpinner')
+    const faSync = require('@fortawesome/fontawesome-free-solid/faSync')
+
+    fontawesome.library.add(faArrowDown)
+    fontawesome.library.add(faSpinner)
+    fontawesome.library.add(faSync)
   </script>
-  <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+</head>
+
+<body>
+  <div>
+    <p>Steam status:
+      <span id="steamStatus"></span>
+    </p>
+  </div>
+  <div id="accountsGrid" class="d-none">
+    <div id="accountsHeader" class="row"></div>
+    <div id="accountsBody"></div>
+  </div>
+  <div class="text-center fa-3x" id="loadingAccounts">
+    <i class="fas fa-spinner fa-spin"></i>
+  </div>
+</body>
+<script>
+  require("./accountList")
+</script>
+
 </html>
