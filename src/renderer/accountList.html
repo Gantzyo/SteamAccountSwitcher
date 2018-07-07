@@ -5,33 +5,103 @@
   <meta charset="UTF-8">
   <title>Steam Account Switcher</title>
 
-  <!-- <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css"> -->
-  <link rel="stylesheet" href="../resources/css/bootstrap-darkly.min.css">
+  <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <!--<link rel="stylesheet" href="../resources/css/bootstrap-darkly.min.css">-->
+  <link rel="stylesheet" href="../resources/css/custom.css">
   <script type="text/javascript">
     // FontAwesome icons
     const fontawesome = require('@fortawesome/fontawesome')
     const faArrowDown = require('@fortawesome/fontawesome-free-solid/faArrowDown')
     const faSpinner = require('@fortawesome/fontawesome-free-solid/faSpinner')
     const faSync = require('@fortawesome/fontawesome-free-solid/faSync')
+    const faPlay = require('@fortawesome/fontawesome-free-solid/faPlay')
+    const faPlusCircle = require('@fortawesome/fontawesome-free-solid/faPlusCircle')
 
     fontawesome.library.add(faArrowDown)
     fontawesome.library.add(faSpinner)
     fontawesome.library.add(faSync)
+    fontawesome.library.add(faPlay)
+    fontawesome.library.add(faPlusCircle)
   </script>
 </head>
 
 <body>
-  <div>
-    <p>Steam status:
-      <span id="steamStatus"></span>
-    </p>
+  <div id="wrapper">
+    <div class="container">
+      <div class="card">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <div class="card">
+              <div class="card-header">
+                <h4>Steam information</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Steam status:
+                  <span id="steamStatus" class="text-danger font-weight-bold">
+                    <i class="fas fa-spinner fa-spin"></i>
+                  </span>
+                </li>
+                <li class="list-group-item">
+                  <span>Current account:</span>
+                  <span id="steamAccount" class="font-weight-bold">-</span>
+                </li>
+              </ul>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="card">
+              <div class="card-header">
+                <h4>Select account:</h4>
+              </div>
+              <div class="card-body">
+                <div id="accountListGrid" class="d-none">
+                  <div class="row align-items-center">
+                    <div class="col col-8">
+                      <select id="accountList">
+                      </select>
+                    </div>
+                    <div class="col col-4">
+                      <button class="btn btn-success" onclick="alert('Not implemented yet!')"><i class="fas fa-play"></i> Launch</button>
+                    </div>
+                  </div>
+                  <div class="row">
+                      <div class="col col-12 text-center">
+                          <button class="btn btn-dark w-100" onclick="alert('Not implemented yet!')"><i class="fas fa-plus-circle"></i> Add new account</button>
+                        </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="card">
+              <div class="card-header">
+                <h4>Account information</h4>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                  <span>Account name:</span>
+                  <span id="accountName" class="font-weight-bold">-</span>
+                </li>
+                <li class="list-group-item">
+                  <span>Profile name:</span>
+                  <span id="profileName" class="font-weight-bold">-</span>
+                </li>
+                <li class="list-group-item">
+                  <span>Steam ID:</span>
+                  <span id="steamID" class="font-weight-bold">-</span>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-  <div id="accountsGrid" class="d-none">
-    <div id="accountsHeader" class="row"></div>
-    <div id="accountsBody"></div>
-  </div>
-  <div class="text-center fa-3x" id="loadingAccounts">
+
+  <div class="text-center fa-3x" id="loadingAccountList">
     <i class="fas fa-spinner fa-spin"></i>
+  </div>
   </div>
 </body>
 <script>

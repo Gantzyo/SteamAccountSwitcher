@@ -11,6 +11,9 @@ $(document).ready(function ()
 {  
     var processInterval = null
     var accounts = null
+    var CHECK_STEAM_PROCESS_INTERVAL = 5000
+    var CHECK_STEAM_PROCESS_INTERVAL_BLUR = 60000
+    var lastSteamProcessStatus = null
     // Where the magic happens
     async function init() {
         try {
@@ -20,79 +23,64 @@ $(document).ready(function ()
     
             accounts = steamUtils.getAccountsFromFile(accountsFile)
     
-            // 2. Generate entries
-            accounts.forEach(account => {
-                addAccountRow(account)
-            })
-            toggleLoadingAccounts()
+            // 2. Retrieve and set last used account
+            displayLastUsedAccount()
+            
+            // 3. Generate entries
+            addAccountOptions()
+            toggleLoadingData()
 
             // Check if steam is started and monitor it's process
             checkSteamProcess()
-            processInterval = setInterval(checkSteamProcess, 3000) // Check steam process every 3 seconds
+            processInterval = setInterval(checkSteamProcess, CHECK_STEAM_PROCESS_INTERVAL) // Check steam process every 5 seconds
 
         } catch(e) {
     
         }
     }
 
-    /* 
-        Generated row layout:
-        <div class="card container">
-            <div class="card-header row">
-            <div class="col-1">
-                <button class="btn btn-sm btn-outline-primary expandButton">
-                <i class="fas fa-arrow-down"></i>
-                </button>
-            </div>
-            <div class="col-10">
-                <p>AccountName</p>
-            </div>
-            <div class="col-1">
-                <button>Start</button>
-            </div>
-            </div>
-            <div class="card-body row">
-            <p class="card-text">Some random text</p>
-            </div>
-        </div>
-    */
-    function addAccountRow(account) {
-        var card = $('<div/>', { class: 'card container'})
 
-        card.append(
-            $('<div/>', { class: 'card-header row'}).append(
-                $('<div/>', { class: 'col-1'}).append(
-                    $('<button/>', {class: 'btn btn-sm btn-primary expandButton'}).append(
-                        $('<i/>', {class: 'fas fa-arrow-down'})
-                    )
-                ),
-                $('<div/>', { class: 'col-10'}).append(
-                    $('<p/>', { text: account.profileName })
-                ),
-                $('<div/>', { class: 'col-1'}).append(
-                    $('<button/>', {text: 'Start'})
-                )
-            ),
-            $('<div/>', { class: 'card-body row'}).append(
-                $('<p/>', { class: 'card-text', text: 'Some random text' })
+    function addAccountOptions() {
+        // Remove childs
+        $('#accountList').empty()
+
+        // Add childs
+        for(var i=0; i<accounts.length; i++) {
+            $('#accountList').append(
+                $('<option/>', {value: i, text: accounts[i].profileName})
             )
-        )
-
-        // Finally, add row
-        $('#accountsBody').append(card)
+        }
     }
 
-    function toggleLoadingAccounts() {
-        $('#loadingAccounts').toggleClass('d-none')
-        $('#accountsGrid').toggleClass('d-none')
+    function toggleLoadingData() {
+        $('#loadingAccountList').toggleClass('d-none')
+        $('#accountListGrid').toggleClass('d-none')
     }
 
     async function checkSteamProcess() {
+        var currentStatus = 'STOPPED'
         if(await isRunning('steam.exe', 'steam', 'steam')) {
-            $('#steamStatus').removeClass('text-success').addClass('text-danger').text('STARTED');
-        } else {
-            $('#steamStatus').removeClass('text-danger').addClass('text-success').text('STOPPED');
+            currentStatus = 'STARTED'
         }
+
+        if(currentStatus != lastSteamProcessStatus) {
+            $('#steamStatus').toggleClass('text-success').toggleClass('text-danger').text(currentStatus)
+
+        }
+
+        lastSteamProcessStatus = currentStatus;
+    }
+
+    function displayLastUsedAccount() {
+        steamUtils.findLastUsedAccount().then((account) => $('#steamAccount').text(account))
+    }
+
+    function displaySelectedAccountData() {
+        var index = $("#accountList").val()
+        if(!index || index < 0) return;
+        $("#accountName").text(accounts[index].accountName);
+        $("#profileName").text(accounts[index].profileName);
+        $("#steamID").text(accounts[index].steamId);
     }
 
     function isRunning(win, mac, linux){
@@ -109,21 +97,21 @@ $(document).ready(function ()
         })
     }
 
-    // When the focus event is triggered (from the main process) check 'steam' process every 3 seconds
+    // When focus event is triggered (from the main process) check 'steam' process every 5 seconds
     ipcRenderer.on('focus', (event, arg) => {
         checkSteamProcess()
         if(processInterval != null) {
             clearInterval(processInterval)
         }
-        processInterval = setInterval(checkSteamProcess, 3000) // Check steam process every 3 seconds
+        processInterval = setInterval(checkSteamProcess, CHECK_STEAM_PROCESS_INTERVAL) // Check steam process every 5 seconds
     });
 
-    // When the focus event is triggered (from the main process) check 'steam' process every 60 seconds
+    // When blur event is triggered (from the main process) check 'steam' process every 60 seconds
     ipcRenderer.on('blur', (event, arg) => {
         if(processInterval != null) {
             clearInterval(processInterval)
         }
-        processInterval = setInterval(checkSteamProcess, 60000) // Check steam process every 60 seconds
+        processInterval = setInterval(checkSteamProcess, CHECK_STEAM_PROCESS_INTERVAL_BLUR) // Check steam process every 60 seconds
     });
 
     $('#accountsBody').on('click', '.expandButton', function() {
@@ -133,6 +121,10 @@ $(document).ready(function ()
         // if(confirm('Exit? Selected account: ' + $(thisButton).html())) {
             window.close()
         }
+    })
+
+    $("#accountList").change(function() {
+        displaySelectedAccountData()
     })
 
     init()

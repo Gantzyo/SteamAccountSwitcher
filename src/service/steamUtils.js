@@ -9,6 +9,10 @@ module.exports.findSteamInstallation = async function () {
     return await Registry.get('HKCU\\SOFTWARE\\VALVE\\STEAM', 'SteamPath')
 }
 
+module.exports.findLastUsedAccount = async function () {
+    return await Registry.get('HKCU\\SOFTWARE\\VALVE\\STEAM', 'AutoLoginUser')
+}
+
 module.exports.getAccountsFromFile = function (filePath) {
     var accounts = []
     if(fs.existsSync(filePath)) {

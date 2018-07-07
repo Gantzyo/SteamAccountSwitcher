@@ -1,0 +1,7 @@
+/* Bootstrap classes names prioritized to maintain compatibility */
+#wrapper {
+    margin-top: 2px;
+}
+#accountList {
+    width: 100%;
+}
